@@ -26,6 +26,7 @@ if(isset($_POST['login'])){
         $error = "Email not registered!";
     }
 }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
