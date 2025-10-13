@@ -6,7 +6,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user'){
     exit();
 }
 
-$sql = "SELECT * FROM results WHERE user_id=".$_SESSION['user_id']." ORDER BY date_taken DESC";
+$sql = "SELECT * FROM user_results WHERE user_id=".(int)$_SESSION['user_id']." ORDER BY taken_at DESC";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -21,11 +21,13 @@ $result = $conn->query($sql);
 <div class="container">
     <h1>My Quiz History</h1>
     <table>
-        <tr><th>Score</th><th>Date Taken</th></tr>
+        <tr><th>Score</th><th>Total</th><th>Percentage</th><th>Date Taken</th></tr>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?php echo $row['score']; ?></td>
-                <td><?php echo $row['date_taken']; ?></td>
+                <td><?php echo htmlspecialchars($row['score']); ?></td>
+                <td><?php echo htmlspecialchars($row['total_questions']); ?></td>
+                <td><?php echo htmlspecialchars($row['percentage']); ?>%</td>
+                <td><?php echo htmlspecialchars($row['taken_at']); ?></td>
             </tr>
         <?php endwhile; ?>
     </table>

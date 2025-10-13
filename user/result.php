@@ -4,8 +4,12 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user'){
     header("Location: ../index.php");
     exit();
 }
-$score = $_SESSION['score'];
-unset($_SESSION['score']);
+// Read summary values saved after quiz
+$score = isset($_SESSION['score']) ? $_SESSION['score'] : 0;
+$total = isset($_SESSION['total_questions']) ? $_SESSION['total_questions'] : 20;
+$percentage = isset($_SESSION['percentage']) ? $_SESSION['percentage'] : null;
+// clear only quiz-related session data
+unset($_SESSION['score'], $_SESSION['total_questions'], $_SESSION['percentage']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +22,10 @@ unset($_SESSION['score']);
 <body>
 <div class="container">
     <h1>Quiz Completed!</h1>
-    <p>Your Score: <b><?php echo $score; ?></b> / 20</p>
+    <p>Your Score: <b><?php echo htmlspecialchars($score); ?></b> / <?php echo htmlspecialchars($total); ?></p>
+    <?php if($percentage !== null): ?>
+        <p>Your Percentage: <b><?php echo htmlspecialchars($percentage); ?>%</b></p>
+    <?php endif; ?>
     <a href="dashboard.php" class="btn">Back to Dashboard</a>
 </div>
 </body>

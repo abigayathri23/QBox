@@ -10,15 +10,21 @@ if(isset($_POST['upload'])){
     $file = $_FILES['csv']['tmp_name'];
     if($file){
         $handle = fopen($file, 'r');
+        // prepare insert statement matching DB schema
+        $stmt = $conn->prepare('INSERT INTO questions (quiz_id, question, option_a, option_b, option_c, option_d, correct_option) VALUES(?,?,?,?,?,?,?)');
+        $quiz_id = 1; // default quiz id; adjust if CSV contains quiz id column
         while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
-            $question = $conn->real_escape_string($data[0]);
-            $a = $conn->real_escape_string($data[1]);
-            $b = $conn->real_escape_string($data[2]);
-            $c = $conn->real_escape_string($data[3]);
-            $d = $conn->real_escape_string($data[4]);
+            $question = trim($data[0]);
+            $a = trim($data[1]);
+            $b = trim($data[2]);
+            $c = isset($data[3]) ? trim($data[3]) : null;
+            $d = isset($data[4]) ? trim($data[4]) : null;
             $answer = strtoupper(trim($data[5]));
-            $conn->query("INSERT INTO questions (question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ('$question','$a','$b','$c','$d','$answer')");
+            if(!in_array($answer, ['A','B','C','D'])) $answer = 'A';
+            $stmt->bind_param('issssss', $quiz_id, $question, $a, $b, $c, $d, $answer);
+            $stmt->execute();
         }
+        if($stmt) $stmt->close();
         fclose($handle);
         $msg = "CSV Uploaded Successfully!";
     }

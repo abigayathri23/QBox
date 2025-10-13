@@ -5,7 +5,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
     header("Location: ../index.php");
     exit();
 }
-$sql = "SELECT r.id, u.name, r.score, r.date_taken FROM results r JOIN users u ON r.user_id=u.id ORDER BY r.date_taken DESC";
+$sql = "SELECT r.id, u.name, r.score, r.total_questions, r.percentage, r.taken_at FROM user_results r JOIN users u ON r.user_id=u.id ORDER BY r.taken_at DESC";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -18,4 +18,16 @@ $result = $conn->query($sql);
 </head>
 <body>
 <div class="container">
-    <h1>All Users Quiz History</h1
+    <h1>All Users Quiz History</h1>
+    <table>
+        <tr><th>User</th><th>Score</th><th>Total</th><th>%</th><th>Taken At</th></tr>
+        <?php while($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['name']); ?></td>
+                <td><?php echo htmlspecialchars($row['score']); ?></td>
+                <td><?php echo htmlspecialchars($row['total_questions']); ?></td>
+                <td><?php echo htmlspecialchars($row['percentage']); ?>%</td>
+                <td><?php echo htmlspecialchars($row['taken_at']); ?></td>
+            </tr>
+        <?php endwhile; ?>
+    </table>
