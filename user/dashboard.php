@@ -50,29 +50,169 @@ if($stmt = $conn->prepare('SELECT score, taken_at FROM user_results WHERE user_i
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard - QBox</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        :root{--bg1:#0f2027;--bg2:#2c5364;--card:#111827;--accent1:#ff8a00;--accent2:#e52e71}
-        body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#e6eef8;min-height:100vh}
-        .wrap{max-width:1100px;margin:40px auto;padding:24px}
-        .header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:12px}
-        .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:20px}
-        h1{margin:0;font-size:22px}
-        p.lead{margin:4px 0 0;color:#cfe6ff}
-        .actions{display:flex;gap:10px}
-        .btn{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600}
-        .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
-        .card{background:rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-        .card h3{margin:0;font-size:14px;color:#cfe6ff}
-        .stat{font-size:28px;font-weight:700;margin-top:8px}
-        .muted{color:#9fb7d9;font-size:13px;margin-top:6px}
-        .welcome{margin-top:28px;background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));padding:20px;border-radius:12px}
-        .welcome p{margin:8px 0 0;color:#dbeeff}
-        @media (max-width:880px){.grid{grid-template-columns:repeat(2,1fr)} }
-        @media (max-width:560px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+        :root {
+            --primary: #3b82f6; /* Soft blue for accents */
+            --secondary: #6b7280; /* Neutral gray for secondary elements */
+            --background: #f3f4f6; /* Light gray background */
+            --card-bg: #ffffff; /* White cards for contrast */
+            --text-primary: #1f2937; /* Dark gray for main text */
+            --text-secondary: #6b7280; /* Lighter gray for secondary text */
+            --border: #e5e7eb; /* Subtle border color */
+        }
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        .wrap {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+        p.lead {
+            margin: 0.25rem 0 0;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        .btn-secondary:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .stat {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            color: var(--text-primary);
+        }
+        .muted {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .welcome {
+            margin-top: 2rem;
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .welcome p {
+            margin: 0.75rem 0 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .welcome .btn-group {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 880px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 560px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -86,9 +226,9 @@ if($stmt = $conn->prepare('SELECT score, taken_at FROM user_results WHERE user_i
                 </div>
             </div>
             <div class="actions">
-                <a href="quiz.php" class="btn">Start Quiz</a>
-                <a href="history.php" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.08);">My History</a>
-                <a href="../logout.php" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.08);">Logout</a>
+                <a href="quiz.php" class="btn btn-primary">Start Quiz</a>
+                <a href="history.php" class="btn btn-secondary">My History</a>
+                <a href="../logout.php" class="btn btn-secondary">Logout</a>
             </div>
         </div>
 
@@ -106,17 +246,17 @@ if($stmt = $conn->prepare('SELECT score, taken_at FROM user_results WHERE user_i
             <div class="card">
                 <h3>Last Attempt</h3>
                 <div class="stat"><?php echo $lastAttempt ? htmlspecialchars($lastAttempt['score']) . ' / 20' : '—'; ?></div>
-                <div class="muted"><?php echo $lastAttempt ? date('F j, Y \a\t g:ia', strtotime($lastAttempt['date_taken'])) : 'No attempts yet'; ?></div>
+                <div class="muted"><?php echo $lastAttempt ? date('F j, Y \a\t g:ia', strtotime($lastAttempt['taken_at'])) : 'No attempts yet'; ?></div>
             </div>
         </div>
 
         <div class="welcome">
-            <h3 style="margin:0">Quick Links</h3>
-            <p style="margin:10px 0 0">Use the buttons to start a timed quiz, review past attempts, or manage your account.</p>
-            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-                <a href="quiz.php" class="btn">Take New Quiz</a>
-                <a href="history.php" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.08);">View History</a>
-                <a href="../logout.php" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.08);">Sign Out</a>
+            <h3>Quick Links</h3>
+            <p>Use the buttons to start a timed quiz, review past attempts, or manage your account.</p>
+            <div class="btn-group">
+                <a href="quiz.php" class="btn btn-primary">Take New Quiz</a>
+                <a href="history.php" class="btn btn-secondary">View History</a>
+                <a href="../logout.php" class="btn btn-secondary">Sign Out</a>
             </div>
         </div>
     </div>
