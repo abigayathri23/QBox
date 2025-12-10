@@ -325,6 +325,5 @@ This project is open source and available under the MIT License.
 
 ---
 
-
 **Last Updated**: December 10, 2025  
 **Version**: 1.0.0
